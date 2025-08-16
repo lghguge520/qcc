@@ -1,193 +1,350 @@
-# QCC - Quick Claude Config
+# 🚀 QCC - Quick Claude Config
 
-QCC (Quick Claude Config, formerly FastCC) is a modern Python CLI tool for managing Claude Code configurations with multi-profile support, cross-platform cloud synchronization, and encrypted storage. Published on PyPI as `qcc`, it supports multiple storage backends including GitHub Gist, local cloud drives (iCloud/OneDrive/Dropbox), and local-only storage.
+<div align="center">
 
-## Features
+[![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://python.org)
+[![PyPI](https://img.shields.io/pypi/v/qcc.svg)](https://pypi.org/project/qcc/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-- 🚀 **Smart Launch**: Zero-config experience with intelligent profile selection
-- 🔐 **Secure Storage**: End-to-end encrypted configuration storage
-- ☁️ **Cross-Platform Sync**: Multiple storage backends (GitHub, cloud drives, local)
-- 📋 **Multi-Profile Management**: Work, personal, and project-specific configurations
-- 🎯 **Zero Installation**: Works with `uvx` for instant deployment
-- ⚡ **Modern Architecture**: Built with contemporary Python packaging standards
+**🌟 现代化 Claude Code 配置管理神器 🌟**
 
-## Installation
+*零配置启动 • 多端同步 • 安全加密 • 一键部署*
 
-### Zero Installation (Recommended)
+</div>
+
+---
+
+## ✨ 核心特性
+
+<table>
+<tr>
+<td width="50%">
+
+### 🎯 **智能启动**
+- 🚀 零配置体验，3秒智能选择
+- 🔄 自动同步，跨设备无缝切换
+- 💡 智能默认，记住你的使用习惯
+
+### 🔐 **安全可靠**
+- 🛡️ 端到端加密存储
+- 🔑 用户自主数据控制
+- 🚫 无中心化存储风险
+
+</td>
+<td width="50%">
+
+### ☁️ **多端同步**
+- 📱 GitHub 跨平台同步
+- 💾 iCloud/OneDrive/Dropbox 本地云盘
+- 🏠 纯本地存储模式
+
+### ⚡ **现代架构**
+- 📦 支持 `uvx` 零安装运行
+- 🎨 现代 Python 包管理
+- 🔧 模块化设计，易于扩展
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🎮 快速开始
+
+### 🌟 零安装体验（推荐）
+
 ```bash
-# Install uv (if not already installed)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Run directly without installation
-uvx qcc
+# 🔥 一行命令，立即体验
+curl -LsSf https://astral.sh/uv/install.sh | sh && uvx qcc
 ```
 
-### Traditional Installation
+<details>
+<summary>💫 首次运行自动完成以下魔法</summary>
+
+1. ⬇️ **自动下载**最新版本
+2. 🔧 **智能选择**存储后端（GitHub/云盘/本地）
+3. 🔐 **安全认证**（GitHub 设备流，无需本地服务器）
+4. ☁️ **创建云存储**，安全加密
+5. 🔄 **同步配置**档案
+6. 🎯 **智能选择**配置（3秒超时）
+7. 🚀 **启动** Claude Code
+
+</details>
+
+### 📦 传统安装
+
 ```bash
-# Install globally with uv
+# 🛠️ 使用 uv（推荐）
 uv tool install qcc
 
-# Or with pip
+# 📎 或使用 pip
 pip install qcc
 ```
 
-## Quick Start
+---
 
-### Smart Launch (Recommended)
+## 🎪 厂商快速配置
+
+### 🌈 一键配置任意 AI 厂商
+
 ```bash
-# On any new computer, just run:
-uvx qcc
+qcc fc  # 🎭 Fast Config - 厂商配置向导
 ```
 
-First run automatically:
-1. Downloads the latest version
-2. Prompts for storage backend selection (GitHub/Cloud drives/Local)
-3. Handles authentication (GitHub device flow)
-4. Creates secure cloud storage
-5. Syncs your configuration profiles
-6. Smart profile selection with 3-second timeout
-7. Launches Claude Code
+<div align="center">
 
-### Manual Operations
+```mermaid
+graph LR
+    A[🎯 选择厂商] --> B[🌐 浏览器注册]
+    B --> C[🔑 输入 API Key]
+    C --> D[✅ 确认配置]
+    D --> E[🚀 启动 Claude]
+    
+    style A fill:#ff6b6b
+    style B fill:#4ecdc4
+    style C fill:#45b7d1
+    style D fill:#f9ca24
+    style E fill:#6c5ce7
+```
+
+</div>
+
+#### 🎨 支持的厂商（云端实时更新）
+
+- 🏢 **Anthropic 官方** - 原生 Claude API
+- 🌟 **Claude Plus** - 第三方增强服务
+- 🔄 **更多厂商** - 云端配置实时更新
+
+---
+
+## 🎯 核心命令
+
+<table>
+<tr>
+<td width="50%">
+
+### 🚀 **快速操作**
 ```bash
-# Initialize with storage backend selection
-qcc init
-
-# Add new configuration profile
-qcc add work "Work configuration"
-
-# List all profiles
-qcc list
-
-# Use specific profile
-qcc use work
-
-# Set default profile for smart launch
-qcc default work
-
-# Check system status
-qcc status
-
-# Manual cloud synchronization
-qcc sync
-
-# Configuration management
-qcc config
-
-# Clean local data (preserves cloud)
-qcc uninstall
+qcc                    # 🌟 智能启动
+qcc fc                 # 🎭 厂商快速配置
+qcc init               # 🔧 初始化设置
+qcc add work           # ➕ 添加配置
 ```
 
-## Storage Backends
+</td>
+<td width="50%">
 
-### GitHub (Cross-Platform)
-- Uses GitHub Gist for cloud storage
-- Device flow authentication (no local server required)
-- Works on all platforms
-- Data stored in your own GitHub account
-
-### Cloud Drives (Platform-Specific)
-- **macOS**: iCloud Drive auto-detection
-- **Windows**: OneDrive auto-detection  
-- **Linux**: Dropbox auto-detection
-- Local file synchronization across devices
-
-### Local Only
-- No cloud synchronization
-- Local storage in `~/.fastcc/`
-- Ideal for isolated environments
-
-## Command Reference
-
-### Core Commands
-- `qcc` - Smart launch with intelligent profile selection
-- `qcc init` - Initialize configuration with storage backend choice
-- `qcc add <name>` - Add new configuration profile
-- `qcc list` - List all configuration profiles
-- `qcc use <name>` - Apply specific profile and launch Claude Code
-- `qcc default <name>` - Set default profile for smart launch
-- `qcc remove <name>` - Delete configuration profile
-
-### Management Commands
-- `qcc config` - Configuration management (change storage backend)
-- `qcc status` - Show system status and backend information
-- `qcc sync` - Manual cloud synchronization
-- `qcc uninstall` - Remove all local configuration data
-
-## Configuration Files
-
-- **Local cache**: `~/.fastcc/cache.json`
-- **GitHub token**: `~/.fastcc/github_token.json` 
-- **Claude settings**: `~/.claude/settings.json`
-
-## Security
-
-- **User-Owned Data**: All configuration stored in user's own accounts
-- **End-to-End Encryption**: API keys encrypted before cloud upload
-- **Secure Authentication**: OAuth device flow for GitHub integration
-- **Local File Permissions**: Restricted access (600) for sensitive files
-- **No Shared Infrastructure**: No centralized database or shared storage
-
-## Architecture
-
-### Modular Design
-```
-fastcc/
-├── core/           # Configuration management
-├── storage/        # Multiple storage backends
-├── auth/           # Authentication (OAuth device flow)
-├── utils/          # Cryptography and UI utilities
-└── cli.py          # Click-based CLI interface
-```
-
-### Storage Layer
-- Abstract interface with multiple implementations
-- Graceful fallback: GitHub → Cloud Files → Local
-- Cross-platform cloud storage detection
-- Comprehensive error handling
-
-## Development
-
-### Setup
+### 📋 **管理命令**
 ```bash
-# Set up development environment
+qcc list               # 📜 查看所有配置
+qcc use work           # 🎯 使用指定配置
+qcc status             # 📊 系统状态
+qcc sync               # 🔄 手动同步
+```
+
+</td>
+</tr>
+</table>
+
+### 🛠️ 高级管理
+
+```bash
+qcc default work       # ⭐ 设置默认配置
+qcc config             # ⚙️  配置管理（更改存储方式）
+qcc remove old         # 🗑️  删除配置
+qcc uninstall          # 🧹 清理本地数据（保留云端）
+```
+
+---
+
+## 🏗️ 存储后端
+
+<div align="center">
+
+| 🌐 GitHub | ☁️ 云盘同步 | 🏠 本地存储 |
+|-----------|------------|------------|
+| 🔄 全平台通用 | 📱 平台特定 | 🔒 完全私有 |
+| 🛡️ 设备流认证 | 📁 文件同步 | 💾 本地缓存 |
+| 🌍 随处可用 | ⚡ 快速同步 | 🚫 无需网络 |
+
+</div>
+
+### 🌟 GitHub 跨平台
+- 🔐 **安全认证**：设备流，无需本地服务器
+- 🌍 **全平台**：Windows、macOS、Linux 通用
+- 📊 **数据主权**：存储在你的 GitHub 账户
+
+### 📁 智能云盘检测
+- 🍎 **macOS**：自动检测 iCloud Drive
+- 🪟 **Windows**：自动检测 OneDrive
+- 🐧 **Linux**：自动检测 Dropbox
+
+### 🏠 本地模式
+- 🔒 **完全私有**：无云端同步
+- 📂 **本地存储**：`~/.fastcc/`
+- 🚀 **极速启动**：无网络依赖
+
+---
+
+## 🛡️ 安全架构
+
+<div align="center">
+
+```mermaid
+graph TD
+    A[🔑 用户数据] --> B[🔐 端到端加密]
+    B --> C[☁️ 用户自有存储]
+    C --> D[🛡️ 零信任架构]
+    
+    E[🚫 无中心化数据库] --> F[🔒 本地文件权限 600]
+    F --> G[🔐 OAuth 设备流]
+    G --> H[✅ 完全安全]
+    
+    style A fill:#ff6b6b
+    style B fill:#4ecdc4
+    style C fill:#45b7d1
+    style D fill:#6c5ce7
+    style E fill:#f9ca24
+    style F fill:#26de81
+    style G fill:#fd79a8
+    style H fill:#00b894
+```
+
+</div>
+
+---
+
+## 🏛️ 系统架构
+
+<div align="center">
+
+```
+🏗️ QCC 模块化架构
+┌─────────────────────────────────────┐
+│  🎮 CLI Interface (Click)          │
+├─────────────────────────────────────┤
+│  🧠 Core Logic                     │
+│   ├── 📋 ConfigManager             │
+│   └── 👤 ConfigProfile             │
+├─────────────────────────────────────┤
+│  🎭 Providers (New!)               │
+│   ├── 🌐 ProvidersManager          │
+│   └── 🔗 Browser Integration       │
+├─────────────────────────────────────┤
+│  💾 Storage Backends               │
+│   ├── 🐙 GitHub (OAuth/Simple)     │
+│   ├── ☁️  Cloud Files              │
+│   └── 🏠 Local Storage             │
+├─────────────────────────────────────┤
+│  🔐 Security & Utils               │
+│   ├── 🔑 Cryptography              │
+│   ├── 🔐 OAuth Authentication      │
+│   └── 🎨 UI Components             │
+└─────────────────────────────────────┘
+```
+
+</div>
+
+### 🎯 设计原则
+
+- 🔌 **插件化**：存储后端可扩展
+- 🛡️ **安全第一**：端到端加密，用户数据自主
+- 🎨 **用户友好**：智能默认，最少交互
+- 🚀 **现代化**：支持 uvx，零安装体验
+
+---
+
+## 🔧 开发指南
+
+### 🏗️ 开发环境
+
+```bash
+# 🚀 快速搭建开发环境
+git clone <repository>
+cd qcc
 python -m venv fastcc_env
 source fastcc_env/bin/activate  # Windows: fastcc_env\Scripts\activate
 
-# Install in development mode
+# 📦 安装开发依赖
 pip install -e .
 
-# Test development version
+# 🧪 运行开发版本
 python -m fastcc.cli --help
 ```
 
-### Build and Release
-```bash
-# Install build tools
-pip install build twine
+### 🧪 测试套件
 
-# Build package
+```bash
+# 🔬 运行测试
+source fastcc_test_env/bin/activate
+
+# 🎯 单个测试
+python3 tests/test_providers.py        # 厂商配置测试
+python3 tests/test_fc_command.py       # FC 命令测试
+python3 tests/test_simplified_fc.py    # 简化流程测试
+
+# 🎪 全部测试
+python3 -m pytest tests/ -v
+```
+
+### 📦 构建发布
+
+```bash
+# 🔨 构建包
+pip install build twine
 python -m build
 
-# Upload to PyPI
+# 🚀 发布到 PyPI
 python -m twine upload dist/*
 ```
 
-## Requirements
+---
 
-- Python 3.7+
-- click - Command-line interface framework
-- requests - HTTP client for API communication
-- cryptography - End-to-end encryption
+## 🎨 配置文件
 
-## License
+| 📁 文件 | 📍 位置 | 📝 说明 |
+|--------|---------|--------|
+| 💾 **本地缓存** | `~/.fastcc/cache.json` | 配置档案缓存 |
+| 🔑 **GitHub Token** | `~/.fastcc/github_token.json` | 认证令牌 |
+| ⚙️ **Claude 设置** | `~/.claude/settings.json` | Claude Code 配置 |
 
-MIT License
+---
 
-## Contributing
+## 📋 系统要求
 
-Contributions welcome! Please submit issues and pull requests on GitHub.
+<div align="center">
 
-## Support
+| 🐍 Python | 📦 依赖 | 🖥️ 平台 |
+|-----------|---------|---------|
+| **3.7+** | click, requests, cryptography | Windows, macOS, Linux |
 
-For questions or issues, please create an issue on GitHub.
+</div>
+
+---
+
+## 🤝 贡献指南
+
+<div align="center">
+
+🎉 **欢迎贡献！** 🎉
+
+[🐛 报告问题](../../issues) • [💡 功能建议](../../issues) • [🔀 提交 PR](../../pulls)
+
+</div>
+
+---
+
+## 📄 开源协议
+
+**MIT License** - 自由使用，欢迎贡献！
+
+---
+
+<div align="center">
+
+### 🌟 如果这个项目对你有帮助，请给个 Star！⭐
+
+**让 AI 配置管理变得简单而优雅** ✨
+
+</div>

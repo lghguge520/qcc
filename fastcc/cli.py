@@ -10,6 +10,11 @@ from pathlib import Path
 from .core.config import ConfigManager
 from .utils.crypto import generate_master_key
 from .utils.ui import select_from_list, print_status, print_header, show_loading
+from .providers.manager import ProvidersManager
+from .providers.browser import (
+    open_browser_and_wait, wait_for_input, confirm_continue, 
+    print_step, print_provider_info
+)
 
 
 @click.group(invoke_without_command=True)
@@ -19,14 +24,15 @@ def cli(ctx, smart):
     """FastCC - 快速Claude配置管理工具
     
     常用命令：
-      nv                          # 智能启动（推荐）
-      nv init                     # 初始化配置
-      nv add <名称>               # 添加新配置
-      nv list                     # 查看所有配置
-      nv use <名称>               # 使用指定配置
-      nv config                   # 配置管理（更改同步方式等）
-      nv uninstall                # 卸载本地配置
-      nv status                   # 查看状态
+      qcc                         # 智能启动（推荐）
+      qcc init                    # 初始化配置
+      qcc add <名称>              # 添加新配置
+      qcc list                    # 查看所有配置
+      qcc use <名称>              # 使用指定配置
+      qcc fc                      # 厂商快速配置
+      qcc config                  # 配置管理（更改同步方式等）
+      qcc uninstall               # 卸载本地配置
+      qcc status                  # 查看状态
     """
     if ctx.invoked_subcommand is None:
         if smart:
@@ -585,6 +591,159 @@ def status():
             
     except Exception as e:
         print(f"❌ 获取状态失败: {e}")
+
+
+@cli.command()
+def fc():
+    """厂商快速配置 (Fast Config)"""
+    try:
+        print_header("厂商快速配置")
+        
+        # 检查是否已初始化，如果未初始化则自动初始化
+        config_manager = ConfigManager()
+        if not config_manager.user_id:
+            print("🔧 首次使用，正在初始化配置...")
+            if not auto_initialize(config_manager):
+                print("❌ 初始化失败，请手动运行 'qcc init'")
+                return
+        
+        # 确保存储后端已初始化
+        if not config_manager.storage_backend:
+            if not config_manager.initialize_storage_backend():
+                print("❌ 存储后端初始化失败")
+                return
+        
+        # 获取厂商配置
+        providers_manager = ProvidersManager()
+        if not providers_manager.fetch_providers():
+            print("❌ 无法获取厂商配置，请检查网络连接")
+            return
+        
+        providers = providers_manager.get_providers()
+        if not providers:
+            print("❌ 暂无可用厂商配置")
+            return
+        
+        # 步骤1: 选择厂商
+        print_step(1, 5, "选择 AI 厂商")
+        print("📋 可用厂商:")
+        for i, provider in enumerate(providers, 1):
+            print(f"  {i}. {provider}")
+        
+        try:
+            choice = input("\n请选择厂商 (输入数字): ").strip()
+            provider_index = int(choice) - 1
+            
+            if not (0 <= provider_index < len(providers)):
+                print("❌ 无效选择")
+                return
+                
+            selected_provider = providers[provider_index]
+            
+        except (ValueError, KeyboardInterrupt):
+            print("❌ 操作取消")
+            return
+        
+        # 步骤2: 显示厂商信息并直接打开注册页面
+        print_step(2, 5, "注册或登录厂商账户")
+        print_provider_info(selected_provider)
+        
+        print(f"\n🌐 正在打开 {selected_provider.name} 注册/登录页面...")
+        
+        # 直接打开浏览器
+        open_browser_and_wait(
+            selected_provider.signup_url,
+            f"请在浏览器中完成 {selected_provider.name} 的注册或登录"
+        )
+        
+        # 步骤3: 等待用户获取API Key
+        print_step(3, 5, "获取 API Key")
+        print(f"💡 {selected_provider.api_key_help}")
+        wait_for_input("完成注册/登录后，请按回车键继续...")
+        
+        # 输入API Key
+        while True:
+            try:
+                api_key = input(f"\n请输入 {selected_provider.name} 的 API Key: ").strip()
+                if not api_key:
+                    print("❌ API Key 不能为空")
+                    continue
+                
+                # 验证API Key格式
+                if not providers_manager.validate_api_key(selected_provider, api_key):
+                    print("⚠️  API Key 格式可能不正确，但将继续使用")
+                
+                break
+                
+            except KeyboardInterrupt:
+                print("\n❌ 操作取消")
+                return
+        
+        # 步骤4: 确认Base URL
+        print_step(4, 5, "确认 API 地址")
+        print(f"默认 API 地址: {selected_provider.base_url}")
+        
+        use_default = input("是否使用默认地址？(Y/n): ").strip().lower()
+        if use_default in ['n', 'no', '否']:
+            while True:
+                custom_base_url = input("请输入自定义 API 地址: ").strip()
+                if providers_manager.validate_base_url(custom_base_url):
+                    base_url = custom_base_url
+                    break
+                else:
+                    print("❌ 无效的 URL 格式")
+        else:
+            base_url = selected_provider.base_url
+        
+        # 步骤5: 输入配置信息
+        print_step(5, 5, "创建配置档案")
+        
+        while True:
+            config_name = input("请输入配置名称: ").strip()
+            if not config_name:
+                print("❌ 配置名称不能为空")
+                continue
+            
+            # 检查是否已存在
+            if config_manager.get_profile(config_name):
+                print(f"❌ 配置 '{config_name}' 已存在，请使用其他名称")
+                continue
+            
+            break
+        
+        description = input("请输入配置描述 (可选): ").strip()
+        if not description:
+            description = f"{selected_provider.name} 配置"
+        
+        # 确认配置信息
+        print(f"\n📋 配置信息确认:")
+        print(f"  厂商: {selected_provider.name}")
+        print(f"  名称: {config_name}")
+        print(f"  描述: {description}")
+        print(f"  API地址: {base_url}")
+        print(f"  API Key: {api_key[:10]}...{api_key[-4:]}")
+        
+        if not confirm_continue("确认创建配置？"):
+            print("❌ 操作取消")
+            return
+        
+        # 创建配置
+        if config_manager.add_profile(config_name, description, base_url, api_key):
+            print("✅ 配置创建成功！")
+            
+            # 询问是否立即使用
+            if confirm_continue("是否立即使用此配置启动 Claude Code？"):
+                if config_manager.apply_profile(config_name):
+                    launch_claude_code()
+            else:
+                print(f"💡 稍后可使用 'qcc use {config_name}' 启动此配置")
+        else:
+            print("❌ 配置创建失败")
+            
+    except KeyboardInterrupt:
+        print("\n❌ 操作取消")
+    except Exception as e:
+        print(f"❌ 厂商配置失败: {e}")
 
 
 def main():

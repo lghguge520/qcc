@@ -36,6 +36,20 @@ python -m build
 python -m twine upload --username __token__ --password [PYPI_TOKEN] dist/*
 ```
 
+### Testing Commands
+```bash
+# Set up test environment
+source fastcc_test_env/bin/activate
+
+# Run individual tests
+python3 tests/test_providers.py        # Provider configuration manager tests
+python3 tests/test_fc_command.py       # Full fc command workflow tests
+python3 tests/test_simplified_fc.py    # Simplified workflow tests
+
+# Run all tests (requires pytest)
+python3 -m pytest tests/ -v
+```
+
 ### Testing End-User Experience
 ```bash
 # Test published package installation
@@ -50,6 +64,7 @@ uv tool install qcc
 # Core commands for testing functionality
 qcc init                    # Initialize with storage backend selection
 qcc add work "Work config"  # Add configuration profile
+qcc fc                      # Provider-guided fast configuration
 qcc list                    # List all profiles
 qcc use work               # Apply specific profile
 qcc config                 # Change storage settings
@@ -62,6 +77,7 @@ qcc uninstall              # Clean local configuration
 - `qcc add <name>` - Add new configuration profile
 - `qcc list` - List all configuration profiles
 - `qcc use <name>` - Apply specific profile and launch Claude Code
+- `qcc fc` - Fast Config: Provider-guided configuration with browser-assisted setup
 - `qcc config` - Configuration management (change storage backend, view settings)
 - `qcc status` - Show system status and backend information
 - `qcc sync` - Manual cloud synchronization
@@ -73,8 +89,9 @@ qcc uninstall              # Clean local configuration
 1. **Storage Backend Selection**: On first run, user chooses between GitHub (cross-platform), cloud drives (platform-specific), or local-only storage
 2. **Authentication**: GitHub option uses device flow for secure authentication without local web server
 3. **Profile Management**: Create, list, and switch between named configuration profiles
-4. **Smart Launch**: 3-second timeout profile selection with intelligent defaults
-5. **Claude Integration**: Direct manipulation of `~/.claude/settings.json` for immediate Claude Code configuration
+4. **Provider-Guided Setup**: `qcc fc` provides streamlined configuration with cloud-based provider registry and browser-assisted account creation
+5. **Smart Launch**: 3-second timeout profile selection with intelligent defaults
+6. **Claude Integration**: Direct manipulation of `~/.claude/settings.json` for immediate Claude Code configuration
 
 ## Code Architecture
 
@@ -91,6 +108,9 @@ fastcc/
 │   ├── github_simple.py  # GitHub with personal access tokens
 │   ├── cloud_file.py     # iCloud/OneDrive/Dropbox auto-detection
 │   └── jsonbin.py        # JSONBin.io cloud storage (experimental)
+├── providers/      # Provider-guided configuration system
+│   ├── manager.py  # ProvidersManager for fetching cloud-based provider configs
+│   └── browser.py  # Browser integration and user interaction utilities
 ├── auth/           # Authentication modules
 │   └── oauth.py    # GitHub OAuth device flow implementation
 ├── utils/          # Utility modules
@@ -126,6 +146,12 @@ fastcc/
 - **Bi-directional Sync**: Local caching (`~/.fastcc/cache.json`) with cloud synchronization
 - **Claude Integration**: Direct manipulation of `~/.claude/settings.json` for immediate effect
 - **Uninstall Support**: Local cleanup while preserving cloud data for re-installation
+
+#### Provider-Guided Configuration (`providers/`)
+- **ProvidersManager**: Fetches AI provider configurations from cloud-based registry (GitHub Gist)
+- **Browser Integration**: Cross-platform browser launching for provider account registration
+- **Streamlined Workflow**: Five-step guided setup: provider selection → browser registration → API key input → URL confirmation → profile creation
+- **Cloud Registry**: Centrally maintained provider database with signup URLs, documentation links, and setup instructions
 
 #### Utility Modules (`utils/`)
 - **Cryptography**: End-to-end encryption with user-specific key derivation

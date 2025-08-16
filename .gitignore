@@ -195,3 +195,5 @@ uv.lock
 
 # Project specific
 setup_claude_config.py
+
+fastcc_test_env/*
