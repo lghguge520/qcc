@@ -3,6 +3,7 @@
 import sys
 import time
 import select
+import threading
 from typing import Optional, List
 
 
@@ -19,9 +20,38 @@ def prompt_with_timeout(message: str, timeout: int = 3, default: str = "") -> st
     """
     print(message, end='', flush=True)
     
-    # Windows系统不支持select，使用简化版本
+    # Windows系统使用threading实现超时
     if sys.platform.startswith('win'):
-        return input()
+        result = []
+        
+        def get_input():
+            try:
+                result.append(input())
+            except EOFError:
+                result.append('')
+        
+        # 启动输入线程
+        input_thread = threading.Thread(target=get_input, daemon=True)
+        input_thread.start()
+        
+        # 倒计时显示
+        for remaining in range(timeout, 0, -1):
+            if input_thread.is_alive():
+                print(f'\r{message[:-2]}，{remaining}秒后自动选择): ', end='', flush=True)
+                time.sleep(1)
+            else:
+                break
+        
+        # 等待输入线程完成或超时
+        input_thread.join(timeout=0.1)
+        
+        if result:
+            print()  # 换行
+            return result[0].strip()
+        else:
+            timeout_icon = "[TIMEOUT]" if sys.platform.startswith('win') else "⏰"
+            print(f"\n{timeout_icon} {timeout}秒超时，使用默认选择: {default}")
+            return default
     
     # Unix系统使用select实现超时
     ready, _, _ = select.select([sys.stdin], [], [], timeout)
@@ -29,7 +59,8 @@ def prompt_with_timeout(message: str, timeout: int = 3, default: str = "") -> st
     if ready:
         return sys.stdin.readline().strip()
     else:
-        print(f"\n⏰ {timeout}秒超时，使用默认选择: {default}")
+        timeout_icon = "[TIMEOUT]" if sys.platform.startswith('win') else "⏰"
+        print(f"\n{timeout_icon} {timeout}秒超时，使用默认选择: {default}")
         return default
 
 
@@ -52,7 +83,11 @@ def select_from_list(items: List[str], prompt: str = "请选择",
     # 显示选择列表
     print(f"\n{prompt}:")
     for i, item in enumerate(items, 1):
-        marker = "⭐" if i - 1 == default_index else "  "
+        # Windows下使用ASCII字符避免编码问题
+        if sys.platform.startswith('win'):
+            marker = "*" if i - 1 == default_index else " "
+        else:
+            marker = "⭐" if i - 1 == default_index else "  "
         print(f"{marker} {i}. {item}")
     
     # 显示提示信息
