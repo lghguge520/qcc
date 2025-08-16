@@ -3,7 +3,7 @@
 <div align="center">
 
 [![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://python.org)
-[![PyPI](https://img.shields.io/pypi/v/qcc.svg)](https://pypi.org/project/qcc/)
+[![PyPI](https://img.shields.io/pypi/v/qcc.svg?color=green&label=PyPI%20v0.2.2)](https://pypi.org/project/qcc/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
