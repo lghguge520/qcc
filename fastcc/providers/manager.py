@@ -30,7 +30,7 @@ class ProvidersManager:
     """厂商配置管理器"""
     
     def __init__(self, config_url: str = None):
-        self.config_url = config_url or "https://gist.githubusercontent.com/lghguge520/6bd1b97c4e2261c702edf5800afb5d31/raw/156064e6772108e85e9fb4b45886911e3f60d348/qcc_collection.json"
+        self.config_url = config_url or "https://gist.githubusercontent.com/lghguge520/6bd1b97c4e2261c702edf5800afb5d31/raw/qcc_collection.json"
         self.providers: Dict[str, Provider] = {}
         self._last_error: Optional[str] = None
     
