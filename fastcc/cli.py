@@ -209,13 +209,17 @@ def launch_claude_code():
     try:
         print("🚀 正在启动Claude Code...")
         
+        # 检测操作系统，Windows需要shell=True
+        import platform
+        is_windows = platform.system() == 'Windows'
+        
         # 尝试启动Claude Code
         result = subprocess.run(['claude', '--version'], 
-                              capture_output=True, text=True)
+                              capture_output=True, text=True, shell=is_windows)
         
         if result.returncode == 0:
             # Claude Code已安装，启动交互模式
-            subprocess.run(['claude'])
+            subprocess.run(['claude'], shell=is_windows)
         else:
             print("❌ 未找到Claude Code，请先安装: https://claude.ai/code")
             
@@ -579,8 +583,10 @@ def status():
         
         # 检查Claude Code状态
         try:
+            import platform
+            is_windows = platform.system() == 'Windows'
             result = subprocess.run(['claude', '--version'], 
-                                  capture_output=True, text=True)
+                                  capture_output=True, text=True, shell=is_windows)
             if result.returncode == 0:
                 version = result.stdout.strip()
                 print(f"  Claude Code: {version}")
