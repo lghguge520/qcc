@@ -36,6 +36,31 @@ python -m build
 python -m twine upload --username __token__ --password [PYPI_TOKEN] dist/*
 ```
 
+### Complete Release Workflow
+```bash
+# 1. Activate environment and check current version
+source fastcc_test_env/bin/activate
+
+# 2. Update version number in fastcc/__init__.py
+# Edit __version__ = "x.x.x" to new version
+
+# 3. Clean and build package
+rm -rf dist/* && python -m build
+
+# 4. Upload to PyPI
+python -m twine upload --username __token__ dist/*
+
+# 5. Update README with new version badge
+# Edit README.md PyPI badge to show new version
+
+# 6. Commit and push changes
+git add fastcc/__init__.py README.md
+git commit -m "🔖 发布 v[VERSION] - 更新版本信息"
+git push
+
+# 7. Verify publication at: https://pypi.org/project/qcc/
+```
+
 ### Testing Commands
 ```bash
 # Set up test environment
