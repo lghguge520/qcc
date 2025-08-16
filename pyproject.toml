@@ -5,14 +5,14 @@ build-backend = "hatchling.build"
 [project]
 name = "qcc"
 dynamic = ["version"]
-description = "Quick Claude Config - 快速管理Claude Code配置的工具"
+description = "🚀 现代化 Claude Code 配置管理神器 - 零配置启动，多端同步，安全加密，厂商快速配置"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.7"
 authors = [
-    { name = "FastCC Team" },
+    { name = "QCC Team" },
 ]
-keywords = ["claude", "config", "cli", "ai"]
+keywords = ["claude", "config", "cli", "ai", "anthropic", "provider", "fast-config", "qcc"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -36,9 +36,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-username/fastcc"
-Repository = "https://github.com/your-username/fastcc.git"
-Issues = "https://github.com/your-username/fastcc/issues"
+Homepage = "https://github.com/lghguge520/qcc"
+Repository = "https://github.com/lghguge520/qcc.git"
+Issues = "https://github.com/lghguge520/qcc/issues"
 
 [project.scripts]
 qcc = "fastcc.cli:main"
@@ -51,8 +51,8 @@ packages = ["fastcc"]
 
 # uvx 兼容配置
 [tool.uvx]
-# 支持 uvx run fastcc
-default-command = "nv"
+# 支持 uvx run qcc
+default-command = "qcc"
 
 [project.optional-dependencies]
 dev = [
